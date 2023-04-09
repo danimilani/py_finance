@@ -293,12 +293,34 @@ print(positions)
 
 # AGGREGATING AND SUMMARIZING DATA #
 
+df.count() # counts the number of rows for each column
+df.sum(axis=1)  # sums the values of all the columns of the 1st row
+df.prod(axis='columns') # returns the product across columns
+df.mean()
+df.median() 
+df.std() # standard deviation
+df.var() # variance
 
+# Select the maximum value from the column ADD
+df.loc[:,'AAD'].max()
+
+# Select minimum value from the 1st row
+df.iloc[0].min()
 
 ################################################################
 
 # EXERCISES #
 
+## Median prices
+
+# Get the median of the opening prices
+med_open = prices.loc[:, 'OPEN'].median()
+
+# Get the median of the closing prices
+med_close = prices.loc[:, 'CLOSE'].median()
+
+if med_open > med_close:
+    print("Trending down.")
 
 ################################################################
 
@@ -308,6 +330,52 @@ print(positions)
 ################################################################
 
 # EXERCISES #
+
+## Creating new columns
+
+# Use the list pcesv to create the column PCESV
+pce['PCESV'] = pcesv
+
+# Use the DataFrame pcnd to create the column PCND
+pce['PCND'] = pcnd
+
+# Create column for PCDG using Pandas read_csv
+pce['PCDG'] = pd.read_csv('pcdg.csv', index_col='DATE')
+
+# Create a column PCE by adding values from other columns
+pce['PCE'] = pce['PCDG'] + pce['PCND'] + pce['PCESV']
+pce.head()
+
+## Dropping columns from DataFrame
+
+columns_to_drop = ['PCDG', 'PCND', 'PCESV']
+
+# Print the current columns of the DataFrame pce
+print(pce.columns)
+
+# Create new_pce by dropping columns_to_drop from pce
+new_pce = pce.drop(columns=columns_to_drop)
+# Print the columns of the new DataFrame
+print(new_pce.columns)
+
+# Drop the columns in_place in the original DataFrame
+pce.drop(columns=columns_to_drop, inplace=True)
+
+# Print the columns of the DataFrame pce
+print(pce.columns)
+<script.py> output:
+    Index(['PCDG', 'PCND', 'PCESV', 'PCE'], dtype='object')
+    Index(['PCE'], dtype='object')
+    Index(['PCE'], dtype='object')
+
+## Manipulating data with Pandas
+
+# Combine the source DataFrames into one
+gdp = pd.concat([ge, gpdi, ne, pce], axis=1)
+
+# Add the columns and create a new column with the result
+gdp['GDP'] = gdp.apply(np.sum, axis=1)
+
 
 
 ################################################################
