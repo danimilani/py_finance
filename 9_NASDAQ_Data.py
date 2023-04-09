@@ -248,11 +248,65 @@ print(df)
 
 # PLOTTING DATA
 
- 
+# Core library is MatplotLib 
+
+my_dataframe.plot()
+
+# Line Plot - Default Plot Type Produced
+
+exxon.plot(x='Date',
+           y='High')
+
+
+exxon.plot(x='Date',
+           y='High'
+          rot=90) # to rotate date labels by 90 degrees
+
+exxon.plot(x='Date',
+           y='High'
+          rot=90
+          title='Exxon Stock Price') # to add a title
+
+ # If we leave out the x argument, the index is used for the x axis
+
+exxon.set_index('Date', inplace=True)
+exxon.plot(y='High',
+           rot=90,
+           title='Exxon Stock Price')
+
+# Use the KIND parameter to change the plot type
+
+exxon2018.plot(x='Month',
+               y='Volume',
+               kind='bar',
+               title='Exxon 2018')
 
 ########################
 
 # PRACTICE 
 
-         
+## Making a line plot
+
+# Plot the daily high price
+alphabet2w.plot(y = 'high')
+
+# Plot the daily high price
+alphabet2w.plot(y='high', rot=90) 
+
+# Plot the daily high price
+alphabet2w.plot(y='high', rot=90, title='High Daily Prices')
+
+## Choose kind of plot
+
+# Plot daily trade volume
+alphabet2w.plot(y='volume', rot=90, title='Alphabet Daily Volume')
+
+# Plot daily trade volume
+alphabet2w.plot(y='volume', kind='bar', title='Alphabet Daily Volume')
+
+# Plot daily trade volume
+alphabet2w.plot(y='volume', kind='hist', title='Alphabet Daily Volume')
+
+
+########################
 
