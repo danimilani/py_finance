@@ -172,9 +172,9 @@ accounts[0:2]
 # skipping middle row
 accounts[[True, False, True]]
 
-# loc and iloc
+# LOC AND ILOC
 
-# loc - access by name
+# LOC - access by name
 
 accounts.loc[['a','c']]
 df.loc[[True, False, True]]
@@ -182,7 +182,7 @@ df.loc[[True, False, True]]
 # columns with loc
 accounts.loc['a':'c','Balance']
 
-# iloc - access by position - index and column positions
+# ILOC - access by position - index and column positions
 
 # Select first two rows using a slice and the first and last columns using a list
 accounts.iloc[0:2, [0,2]]
@@ -202,6 +202,102 @@ accounts.iloc[:2, 1:] = 'NA'
 
 # EXERCISES #
 
+## Accessing using names
+
+# Select the Balance for October 2nd
+print(ledger.loc['2020-10-02', 'Balance'])
+
+# Select the Balance for October 3rd
+print(ledger.loc['2020-10-03', 'Balance'])
+<script.py> output:
+    1322.0
+    1922.0
+
+# Cash and Securities for October 3rd
+print(ledger.loc['2020-10-03', ['Cash', 'Securities']])
+       
+# Balance for October 1st and 3rd
+print(ledger.loc[['2020-10-01','2020-10-03'] , 'Balance'])
+<script.py> output:
+        Cash         -100.0
+Securities    700.0
+Name: 2020-10-03, dtype: float64
+2020-10-01    1222.0
+2020-10-03    1922.0
+Name: Balance, dtype: float64
+
+# All columns for October 1st
+print(ledger.loc['2020-10-01', :])
+
+# Balance for all dates
+print(ledger.loc[:, 'Balance'])
+<script.py> output:
+    Cash             0.0
+    Securities    -300.0
+    Balance       1222.0
+    Name: 2020-10-01, dtype: float64
+    2020-10-01    1222.0
+    2020-10-02    1322.0
+    2020-10-03    1922.0
+    Name: Balance, dtype: float64
+
+## Accessing using indexes
+
+# Select the oldest price - Cell first row, Price column
+print(positions.iloc[:1, 3:])
+
+# Select the newest symbol - Cell last row, Symbol column
+print(positions.iloc[2:, 0])
+<script.py> output:
+       Price
+    0  96.96
+    2    AMZN
+    Name: Symbol, dtype: object
+
+# Oldest two purchase dates
+print(positions.iloc[0:2, 1])
+
+# Newest purchase and quantity
+print(positions.iloc[2, 1:3])
+
+<script.py> output:
+    0   2016-01-08
+    1   2018-09-07
+    Name: Purchased, dtype: datetime64[ns]
+    Purchased    2020-02-14 00:00:00
+    Quantity                      14
+    Name: 2, dtype: object
+
+
+# Set 2020 quantity
+positions.iloc[2, 2] = 15
+
+print(positions)
+<script.py> output:
+      Symbol  Purchased  Quantity   Price
+    0   AAPL 2016-01-08        23   96.96
+    1   AAPL 2018-09-07        50  221.30
+    2   AMZN 2020-02-14        15  324.95
+
+# Set all quantities to zero
+positions.iloc[:3, 2] = 0
+
+print(positions)
+<script.py> output:
+      Symbol  Purchased  Quantity   Price
+    0   AAPL 2016-01-08         0   96.96
+    1   AAPL 2018-09-07         0  221.30
+    2   AMZN 2020-02-14         0  324.95
+
+################################################################
+
+# AGGREGATING AND SUMMARIZING DATA #
+
+
+
+################################################################
+
+# EXERCISES #
 
 
 ################################################################
