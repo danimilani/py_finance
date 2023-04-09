@@ -1,1 +1,1 @@
-# py_finance
+# Finance Fundamentals in Python
