@@ -287,9 +287,120 @@ print(year_after)
 
 # DICTIONARIES #
 
+# Store and look up items using a key, that is unique
+# represented as a series of key value pairs separated by columns
+
+{'key1':'value1', 'key2':'value2'}
+
+ticker_symbols = {'AAPL':'Apple', 'F':'Ford', 'LUV':'Southwest'}
+print(ticker_symbols)
+# result: {'AAPL':'Apple', 'F':'Ford', 'LUV':'Southwest'}
+
+ticker_symbols2 = dict([['AAPL','Apple'], ['F','Ford'], ['LUV', 'Southwest']])
+print(ticker_symbols2)
+# result: {'AAPL':'Apple', 'F':'Ford', 'LUV':'Southwest'}
+
+## Adding keys to dictionaries or update values
+
+ticker_symbols['XON'] = 'Exxon'
+ticker_symbols
+# Result: {'AAPL':'Apple', 'F':'Ford', 'LUV':'Southwest', 'XON':'Exxon'}
+
+## Accessing values stored on dictionaries
+
+ticker_symbols['F']
+# result: 'Ford'
+
+company = ticker_symbols.get('LUV')
+print(company)
+# result: 'Southwest'
+
+## Deleting keys from dictionaries
+
+ticker_symbols
+#result: {'AAPL':'Apple', 'F':'Ford', 'LUV':'Southwest', 'XON':'Exxon'}
+del(ticker_symbols['XON'])
+#result: {'AAPL':'Apple', 'F':'Ford', 'LUV':'Southwest'}
+
+########################################################
+
+# EXERCISES #
+
+## Creating and accessing dictionaries
+
+# Add an entry for the company Alphabet with a key of 38259P706 and a value of GOOG.
+
+cusip_lookup = {}
+
+# Alphabet
+cusip_lookup['38259P706'] = 'GOOG'
+
+print(cusip_lookup)
+<script.py> output:
+    {'38259P706': 'GOOG'}
+    
+# Add an entry for Apple to cusip_lookup with a key of 037833100 and a value of AAPL.
+
+cusip_lookup = {}
+
+# Alphabet
+cusip_lookup['38259P706'] = 'GOOG'
+
+# Apple
+cusip_lookup['037833100'] = 'AAPL'
+
+print(cusip_lookup)
+<script.py> output:
+    {'38259P706': 'GOOG', '037833100': 'AAPL'}
+
+# Lookup the symbol for Apple in cusip_lookup using its CUSIP number, 037833100.
+
+# Lookup Apple
+cusip_lookup['037833100']
+# result:'AAPL'
 
 
+## Accessing safely and deleting
 
+# Access the closing price for the day before in a way that is safe, even if that date is missing.
+
+# Closing price for day before
+day_before_closing_price_date = closing_price_date - timedelta(days=1)
+
+# Safely print closing price day before or None if it's missing
+print(alphabet_hist.get(day_before_closing_price_date))
+<script.py> output:
+    1211.78
+
+# Supply the default value 'Missing' to use if a key is missing from a dictionary 
+# so that your reporting will be more meaningful.
+
+# Get day eight weeks in future
+future_closing_price_date = closing_price_date + timedelta(weeks=8)
+
+# Safely get value for the future date or the string 'Missing'
+print(alphabet_hist.get(future_closing_price_date, 'Missing'))
+<script.py> output:
+    Missing
+
+# After deciding that the data might be incorrect, 
+# delete the entry whose value is held in closing_price_date from alphabet_hist.
+
+# Print with key
+print(alphabet_hist)
+
+# Remove entry
+del(alphabet_hist[closing_price_date])
+
+# Print with key deleted
+print(alphabet_hist)
+
+<script.py> output:
+    {datetime.datetime(2019, 8, 2, 0, 0): 1196.32, datetime.datetime(2019, 8, 1, 0, 0): 1211.78, datetime.datetime(2019, 7, 31, 0, 0): 1218.2, datetime.datetime(2019, 7, 30, 0, 0): 1228}
+    {datetime.datetime(2019, 8, 1, 0, 0): 1211.78, datetime.datetime(2019, 7, 31, 0, 0): 1218.2, datetime.datetime(2019, 7, 30, 0, 0): 1228}
+
+
+########################################################
 
 
 
