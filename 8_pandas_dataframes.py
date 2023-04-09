@@ -148,11 +148,60 @@ print(stocks)
 
 # ACCESSING DATA #
 
+# Accessing Columns
 
+# 1. Access column of the data
+
+accounts['Balance']
+
+# 2. Access column using dot-syntax
+
+accounts.Balance
+
+# 3. Access multiple columns at once
+
+accounts[['Bank Code', 'Account#']]
+
+# Accessing Rows
+
+# 4. Access rows using brackets - slicing
+
+accounts[0:2]
+
+# 5. Access rows using brackets - boolean
+# skipping middle row
+accounts[[True, False, True]]
+
+# loc and iloc
+
+# loc - access by name
+
+accounts.loc[['a','c']]
+df.loc[[True, False, True]]
+
+# columns with loc
+accounts.loc['a':'c','Balance']
+
+# iloc - access by position - index and column positions
+
+# Select first two rows using a slice and the first and last columns using a list
+accounts.iloc[0:2, [0,2]]
+
+# Setting Values
+
+# 1. Setting a single value
+
+accounts.loc['a', 'Balance'] = 0
+
+# 2. Setting multiple values
+
+# using slices of the first 2 rows and the last 2 columns and set cells to NA
+accounts.iloc[:2, 1:] = 'NA'
 
 ################################################################
 
 # EXERCISES #
+
 
 
 ################################################################
