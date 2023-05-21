@@ -73,3 +73,149 @@ print("Initial value: " + str(round(initial_investment_again, 2)))
 
 ## PRESENT AND FUTURE VALUE
 
+# CALCULATING PV WITH NUMPY
+
+# Calculate the present value of $100 received 3 years from now at a 1.0% inflation rate
+import numpy as np
+np.pv(rate=0.01, nper=3, pmt=0, fv=100)
+#result:-97.05
+# You have to spend 97.05 dollars in these investment conditions in order to receive a 
+# future positive value of $100 after 3 years.
+
+# CALCULATING FV WITH NUMPY
+
+# Calculate the future value of $100 invested for 3 years at a 5% avg annual rate of return
+import numpy as np
+np.fv(rate=0.05, nper=3, pmt=0, pv=-100)
+#result=115.76
+
+# EXERCISE - PV
+
+# Import numpy as np
+import numpy as np
+
+# Calculate investment_1
+investment_1 = np.pv(rate=0.03, nper=15, pmt=0, fv=10000)
+
+# Note that the present value returned is negative, so we multiply the result by -1
+print("Investment 1 is worth " + str(round(-investment_1, 2)) + " in today's dollars")
+
+# Calculate investment_2
+investment_2 = np.pv(rate=0.05, nper=10, pmt=0, fv=10000)
+print("Investment 2 is worth " + str(round(-investment_2, 2)) + " in today's dollars")
+
+## <script.py> output:    Investment 1 is worth 6418.62 in today's dollars
+    # Investment 2 is worth 6139.13 in today's dollars
+  
+# EXERCISE - FV
+
+import numpy as np
+
+# Calculate investment_1
+investment_1 = np.fv(rate=0.05, nper=15, pmt=0, pv=-10000)
+print("Investment 1 will yield a total of $" + str(round(investment_1, 2)) + " in 15 years")
+
+# Calculate investment_2
+investment_2 = np.fv(rate=0.08, nper=15, pmt=0, pv=-10000)
+print("Investment 2 will yield a total of $" + str(round(investment_2, 2)) + " in 15 years")
+
+# <script.py> output:    Investment 1 will yield a total of $20789.28 in 15 years
+   # Investment 2 will yield a total of $31721.69 in 15 years
+
+# EXERCISE - Adjusting future values for inflation
+
+# First, forecast the FV of an investment given a rate of return
+# Second, discount the FV of the investment by a projected inflation rate
+
+import numpy as np
+
+# Calculate investment_1
+investment_1 = np.fv(rate=0.08, nper=10, pmt=0, pv=-10000)
+print("Investment 1 will yield a total of $" + str(round(investment_1, 2)) + " in 10 years")
+
+# Calculate investment_2
+investment_1_discounted = np.pv(rate=0.03, nper=10, pmt=0, fv=investment_1)
+print("After adjusting for inflation, investment 1 is worth $" + str(round(-investment_1_discounted, 2)) + " in today's dollars")
+
+# <script.py> output:
+   # Investment 1 will yield a total of $21589.25 in 10 years
+   # After adjusting for inflation, investment 1 is worth $16064.43 in today's dollars
+
+# NET PRESENT VALUE AND CASH FLOWS
+
+# EXERCISE - Discounting Cash Flows
+
+#Calculate the net present value of the investment with cash_flows at a discount rate of 3% per year, and assign it to investment_1.
+#Repeat the process with a discount rate of 5% per year, and assign it to investment_2.
+#Repeat the process with a discount rate of 7% per year, and assign it to investment_3.
+
+import numpy as np
+
+# Predefined array of cash flows
+cash_flows = np.array([100, 100, 100, 100, 100])
+
+# Calculate investment_1
+investment_1 = np.npv(rate=0.03, values=cash_flows)
+print("Investment 1's net present value is $" + str(round(investment_1, 2)) + " in today's dollars")
+
+# Calculate investment_2
+investment_2 = np.npv(rate=0.05, values=cash_flows)
+print("Investment 2's net present value is $" + str(round(investment_2, 2)) + " in today's dollars")
+
+# Calculate investment_3
+investment_3 = np.npv(rate=0.07, values=cash_flows)
+print("Investment 3's net present value is $" + str(round(investment_3, 2)) + " in today's dollars")
+
+#<script.py> output:
+    #Investment 1's net present value is $471.71 in today's dollars
+    #Investment 2's net present value is $454.6 in today's dollars
+    #Investment 3's net present value is $438.72 in today's dollars
+
+# EXERCISE - Initial Project Costs
+
+#Create a numpy array of the cash flow values for project 1, assigning it to cash_flows_1, and then do the same for project 2, assigning the values to cash_flows_2.
+#Calculate the net present value of both projects 1 and 2 assuming a 3% inflation rate.
+
+import numpy as np
+
+# Create an array of cash flows for project 1
+cash_flows_1 = np.array([-250,100,200,300,400])
+
+# Create an array of cash flows for project 2
+cash_flows_2 = np.array([-250,300,-250,300,300])
+
+# Calculate the net present value of project 1
+investment_1 = np.npv(rate=0.03, values=cash_flows_1)
+print("The net present value of Investment 1 is worth $" + str(round(investment_1, 2)) + " in today's dollars")
+
+# Calculate the net present value of project 2
+investment_2 = np.npv(rate=0.03, values=cash_flows_2)
+print("The net present value of Investment 2 is worth $" + str(round(investment_2, 2)) + " in today's dollars")
+
+#<script.py> output:
+    #The net present value of Investment 1 is worth $665.54 in today's dollars
+    #The net present value of Investment 2 is worth $346.7 in today's dollars
+
+# EXERCISE - Diminishing cash flows
+
+#Calculate the present value of a single $100 payment received 30 years from now with an annual inflation rate of 3%, and assign it to investment_1.
+#Calculate the present value of the same payment, but if it was received 50 and 100 years from now, and assign it to investment_2 and investment_3 respectively.
+
+import numpy as np
+
+# Calculate investment_1
+investment_1 = np.pv(rate=0.03, nper=30, pmt=0, fv=100)
+print("Investment 1 is worth $" + str(round(-investment_1, 2)) + " in today's dollars")
+
+# Calculate investment_2
+investment_2 = np.pv(rate=0.03, nper=50, pmt=0, fv=100)
+print("Investment 2 is worth $" + str(round(-investment_2, 2)) + " in today's dollars")
+
+# Calculate investment_3
+investment_3 = np.pv(rate=0.03, nper=100, pmt=0, fv=100)
+print("Investment 3 is worth $" + str(round(-investment_3, 2)) + " in today's dollars")
+
+#<script.py> output:
+   # Investment 1 is worth $41.2 in today's dollars
+   # Investment 2 is worth $22.81 in today's dollars
+   # Investment 3 is worth $5.2 in today's dollars
