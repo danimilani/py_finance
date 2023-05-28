@@ -146,6 +146,82 @@ np.cumsum(np.array([1,2,3]))
 import numpy as np
 np.cumprod(np.array[1,2,3]))
 
+# Forecasting cumulative growth
+
+# EXAMPLE: What is the cumulative value at each point in time of a $100 investment 
+#that grows by 3% in p1, 3% in p2, and 5% in p3?
+
+import numpy as np
+np.cumprod(1 + np.array([0.03, 0.03, 0.05]))
+#result: array([1.03, 1.0609, 1.113945])
+
+# EXERCISE - Cumulative payments and home equity
+
+import numpy as np
+
+# Calculate the cumulative home equity (principal) over time
+cumulative_home_equity = np.cumsum(np.array([principal_paid]))
+
+# Calculate the cumulative interest paid over time
+cumulative_interest_paid = np.cumsum(np.array([interest_paid]))
+
+# Calculate your percentage home equity over time
+cumulative_percent_owned = down_payment_percent + (cumulative_home_equity/home_value)
+print(cumulative_percent_owned)
+
+# Plot the cumulative interest paid vs equity accumulated
+plt.plot(cumulative_interest_paid, color='red')
+plt.plot(cumulative_home_equity, color='blue')
+plt.legend(handles=[interest_plot, principal_plot], loc=2)
+plt.show()
+
+# EXERCISE - Rising housing prices
+
+import numpy as np
+
+# Calculate the cumulative growth over time
+cumulative_growth_forecast = np.cumprod(1+growth_array)
+
+# Forecast the home value over time
+home_value_forecast = home_value*cumulative_growth_forecast
+
+# Forecast the home equity value owned over time
+cumulative_home_value_owned = cumulative_percent_owned*home_value_forecast
+
+# Plot the home value vs equity accumulated
+plt.plot(home_value_forecast, color='red')
+plt.plot(cumulative_home_value_owned, color='blue')
+plt.legend(handles=[homevalue_plot, homeequity_plot], loc=2)
+plt.show()
+
+# EXERCISE - Falling housing prices and underwater mortgages
+
+# An underwater mortgage is when the remaining amount you owe on your mortgage 
+# is actually higher than the value of the house itself.
+
+# In this exercise, you will calculate the worst case scenario where home prices 
+# drop steadily at the rate of 0.45% per month.
+
+import numpy as np
+import pandas as pd
+
+# Cumulative drop in home value over time as a ratio
+cumulative_decline_forecast = np.cumprod(1+decline_array)
+
+# Forecast the home value over time
+home_value_forecast = cumulative_decline_forecast * home_value
+
+# Find all periods where your mortgage is underwater
+underwater = principal_remaining > home_value_forecast
+pd.value_counts(underwater)
+
+# Plot the home value vs principal remaining
+plt.plot(home_value_forecast, color='red')
+plt.plot(principal_remaining, color='blue')
+plt.legend(handles=[homevalue_plot, principal_plot], loc=2)
+plt.show()
+
+
 
 
 
