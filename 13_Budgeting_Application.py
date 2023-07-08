@@ -154,4 +154,83 @@ plt.show()
 #Set the investment_rate_annual to 7% and derive the monthly investment rate.
 #Calculate the required monthly investment to amass $1,000,000 over 15 years.
 
+# EXERCISE - So you want to be a millionaire?
+
+import numpy as np
+
+# Set the annual investment return to 7%
+investment_rate_annual = 0.07
+
+# Calculate the monthly investment return
+investment_rate_monthly = (1+investment_rate_annual)**(1/12) - 1
+
+# Calculate your required monthly investment to amass $1M
+required_investment_monthly = np.pmt(rate=investment_rate_monthly, nper=forecast_months, pv=0, fv=-1000000)
+print("You will have to invest $" + str(round(required_investment_monthly, 2)) + " per month to amass $1M over 15 years")
+
+<script.py> output:
+    You will have to invest $3214.35 per month to amass $1M over 15 years
+
+# EXERCISE - Investing a percentage of your income (I)
+
+import numpy as np
+
+# Calculate your monthly deposit into your investment account
+investment_deposit_forecast = cash_flow_forecast * monthly_investment_percentage
+
+# The rest goes into your savings account
+savings_forecast_new = cash_flow_forecast * (1 - monthly_investment_percentage)
+
+# Calculate your cumulative savings over time
+cumulative_savings_new = np.cumsum(savings_forecast_new)
+
+# Plot your forecasted monthly savings vs investments
+plt.plot(investment_deposit_forecast, color='red')
+plt.plot(savings_forecast_new, color='blue')
+plt.legend(handles=[investments_plot, savings_plot], loc=2)
+plt.show()
+
+# EXERCISE - Investing a percentage of your income (II)
+
+import numpy as np
+
+# Loop through each forecast period
+for i in range(forecast_months):
+    
+    # Find the previous investment deposit amount
+    if i == 0: 
+        previous_investment = 0
+    else:
+        previous_investment = investment_portfolio[i-1]
+        
+    # Calculate the value of your previous investments, which have grown
+    previous_investment_growth = previous_investment*(1 + investment_rate_monthly)
+    
+    # Add your new deposit to your investment portfolio
+    investment_portfolio[i] =  previous_investment_growth + investment_deposit_forecast[i]
+    
+    # Calculate your net worth at each point in time
+    net_worth[i] = investment_portfolio[i] + cumulative_savings_new[i]
+         
+# Plot your forecasted cumulative savings vs investments and net worth
+plot_investments(investment_portfolio, cumulative_savings_new, net_worth)
+
+# 5. COMPOUND INTEREST - The power of time and compound interest
+
+# EXERCISE - Inflation-adjusted net worth
+
+import numpy as np
+
+# Set your future net worth
+future_net_worth = 900000
+
+# Set the annual inflation rate to 2.5%
+annual_inflation = 0.025
+
+# Calculate the present value of your terminal wealth over 15 years
+inflation_adjusted_net_worth = np.pv(rate=annual_inflation, nper=15, pmt=0, fv=-1*future_net_worth)
+print("Your inflation-adjusted net worth: $" + str(round(inflation_adjusted_net_worth, 2)))
+
+<script.py> output:
+    Your inflation-adjusted net worth: $621419.0
 
