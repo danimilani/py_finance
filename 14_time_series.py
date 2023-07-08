@@ -181,7 +181,87 @@ None
 
 ## Lags, changes, and returns for stock price series
 
+google = pd.read_csv('google.csv', parse_dates=['date'], index_col='date')
+google.info()
+google.head()
 
+# Method .shift() to move data between past and future
+
+google['shifted'] = google.price.shift() # default: periods = 1
+google['lagged'] = google.price.shift(periods=-1) #  move to the past
+
+# Calculate one-period percent change 
+
+google['return'] = google.change.sub(1).mul(100)
+
+# Difference in value for two adjacent periods
+
+google['diff'] = google.price.diff()
+
+# Percentage change for two adjacent periods
+
+google['diff'] = google.price.pct_change().mul(100)
+google['diff'] = google.price.pct_change(periods = 3).mul(100)
+
+# EXERCISE 1
+
+# Import data here
+google = pd.read_csv('google.csv', parse_dates=['Date'], index_col='Date')
+
+# Set data frequency to business daily
+google = google.asfreq('B')
+
+# Create 'lagged' and 'shifted'
+google['lagged'] = google.Close.shift(periods=-90)
+google['shifted'] = google.Close.shift(periods=90)
+
+# Plot the google price series
+google.plot(subplots=True)
+plt.show()
+
+# EXERCISE 2 - Calculating stock price changes
+
+# Created shifted_30 here
+yahoo['shifted_30'] = yahoo.price.shift(30)
+
+# Subtract shifted_30 from price
+yahoo['change_30'] = yahoo.price.sub(yahoo.shifted_30)
+
+# Get the 30-day price difference
+yahoo['diff_30'] = yahoo.price.diff(30)
+
+# Inspect the last five rows of price
+print(yahoo.tail())
+
+# Show the value_counts of the difference between change_30 and diff_30
+print(yahoo.change_30.sub(yahoo.diff_30).value_counts())
+
+"""
+           price  shifted_30  change_30  diff_30
+date                                             
+2015-12-25    NaN       32.19        NaN      NaN
+2015-12-28  33.60       32.94       0.66     0.66
+2015-12-29  34.04       32.86       1.18     1.18
+2015-12-30  33.37       32.98       0.39     0.39
+2015-12-31  33.26       32.62       0.64     0.64
+0.0    703
+dtype: int64
+"""
+
+# EXERCISE 3 - Plotting multi-period returns
+
+# Create daily_return
+google['daily_return'] = google.Close.pct_change(periods = 1).mul(100)
+
+# Create monthly_return
+google['monthly_return'] = google.Close.pct_change(periods = 30).mul(100)
+
+# Create annual_return
+google['annual_return'] = google.Close.pct_change(periods = 360).mul(100)
+
+# Plot the result
+google.plot(subplots=True)
+plt.show()
 
 
 
