@@ -1,4 +1,4 @@
-# Manipulating Date and Time Series
+# CHAPTER 1 - Manipulating Date and Time Series
 
 # How to use dates & times with pandas
 
@@ -262,6 +262,140 @@ google['annual_return'] = google.Close.pct_change(periods = 360).mul(100)
 # Plot the result
 google.plot(subplots=True)
 plt.show()
+
+# CHAPTER 2 - Compare time series growth rates
+
+# Comparing stock performance
+
+# Normalizing a single series
+
+google = pd.read_csv('google.csv', parse_dates=['date'], index_col = 'date')
+google.head(3)
+"""
+date          price
+2010-01-04    313.06
+2010-01-05    311.68
+2010-01-06    303.83
+"""
+first_price = google.price.iloc[0] #int-based selection
+first_price
+#result: 313.06
+
+first_price == google.loc['2010-01-04','price']
+#result: True
+
+#divide the price series by its first price using div and multiplying by 100
+normalized = google.price.div(first_price).mul(100)
+normalized.plot(title='Google Normalized Series')
+
+# Comparing with a benchmark - compare the performance of the stocks agains the broader stock market
+
+index = pd.read_csv('benchmark.csv', parse_dates=['date'], index_col = 'date')
+index.info()
+
+prices = pd.concat([prices, index], axis = 1).dropna()
+prices.info()
+
+normalized = prices.div(prices.iloc[0]).mul(100)
+normalized.plot()
+
+# To show the performance difference for each stock relative to the benchmark in percentage points you
+# can subtract the normalized SP500 from the normalized stock prices
+
+diff = normalized[tickers].sub(normalized['SP500'], axis=0)
+diff.plot()
+
+# EXERCISE
+
+# 1. Compare the performance of several asset classes
+# To broaden your perspective on financial markets, let's compare four key assets: stocks, bonds, gold, and oil.
+
+"""
+              SP500   Bonds     Gold    Oil
+DATE                                       
+2007-06-29  1503.35  402.15   648.50  70.47
+2007-07-02  1519.43  402.96   650.50  71.11
+2007-07-03  1524.87  402.02   657.25  71.41
+2007-07-05  1525.40  400.15   655.90  71.81
+2007-07-06  1530.44  399.31   647.75  72.80
+...             ...     ...      ...    ...
+2017-06-20  2437.03  621.84  1246.50  43.34
+2017-06-21  2435.61  622.94  1247.05  42.48
+2017-06-22  2434.50  622.93  1251.40  42.53
+2017-06-23  2438.30  623.57  1256.30  42.86
+2017-06-26  2439.07  625.00  1240.85  43.24
+"""
+
+# Import data here
+prices = pd.read_csv('asset_classes.csv', parse_dates=['DATE'], index_col='DATE')
+# Inspect prices here
+print(prices.info())
+# Select first prices
+first_prices = prices.iloc[0]
+# Create normalized_prices
+normalized = prices.div(first_prices).mul(100)
+# Plot normalized_prices
+normalized.plot()
+plt.show()
+
+"""
+<class 'pandas.core.frame.DataFrame'>
+DatetimeIndex: 2469 entries, 2007-06-29 to 2017-06-26
+Data columns (total 4 columns):
+ #   Column  Non-Null Count  Dtype  
+---  ------  --------------  -----  
+ 0   SP500   2469 non-null   float64
+ 1   Bonds   2469 non-null   float64
+ 2   Gold    2469 non-null   float64
+ 3   Oil     2469 non-null   float64
+"""
+
+# 2. Comparing stock prices with a benchmark
+
+# Import stock prices and index here
+stocks = pd.read_csv('nyse.csv', parse_dates=['date'], index_col='date')
+dow_jones = pd.read_csv('dow_jones.csv', parse_dates=['date'], index_col='date')
+# Concatenate data and inspect result here
+data = pd.concat([stocks, dow_jones], axis=1)
+print(data.info())
+
+"""
+DatetimeIndex: 1762 entries, 2010-01-04 to 2016-12-30
+    Data columns (total 4 columns):
+     #   Column  Non-Null Count  Dtype  
+    ---  ------  --------------  -----  
+     0   JNJ     1762 non-null   float64
+     1   JPM     1762 non-null   float64
+     2   XOM     1762 non-null   float64
+     3   DJIA    1762 non-null   float64
+"""
+# Normalize and plot your data here
+data.div(data.iloc[0]).mul(100).plot()
+plt.show()
+
+# 3. Plot performance difference vs benchmark index
+# Let's compare the performance of Microsoft (MSFT) and Apple (AAPL) to the S&P 500 over the last 10 years.
+
+# Create tickers
+tickers = ['MSFT', 'AAPL']
+# Import stock data here
+stocks = pd.read_csv('msft_aapl.csv', parse_dates=['date'], index_col = 'date')
+# Import index here
+sp500 = pd.read_csv('sp500.csv', parse_dates=['date'], index_col = 'date')
+# Concatenate stocks and index here
+data = pd.concat([stocks,sp500], axis=1).dropna()
+# Normalize data
+normalized = data.div(data.iloc[0]).mul(100)
+# Subtract the normalized index from the normalized stock prices, and plot the result
+diff = normalized[tickers].sub(normalized['SP500'], axis=0)
+diff.plot()
+plt.show()
+
+
+
+
+
+
 
 
 
