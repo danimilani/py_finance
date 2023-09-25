@@ -391,6 +391,312 @@ diff = normalized[tickers].sub(normalized['SP500'], axis=0)
 diff.plot()
 plt.show()
 
+##############
+
+# Changing the time series frequency: resampling
+
+# Upsampling - fill or interpolate missing data - increasing the frequency of time-series
+# Downsampling - aggregate existing data - decreasing the frequency of time-series
+
+# UPSAMPLE - Quarterly Data to Monthly
+
+dates = pd.date_range(start='2016', periods=4, freq='Q')
+data = range(1,5)
+quarterly = pd.Series(data=data, index=dates)
+quarterly
+
+monthly = quarterly.asfreq('M') # to month-end frequency
+
+# Fill Methods
+
+# 1 - Forward Fill 
+monthly['ffill'] = quarterly.asfreq('M', method='ffill')
+
+# 2 - Backfill
+monthly['bfill'] = quarterly.asfreq('M', method='bfill')
+
+# 3 - Provide Value
+monthly['value'] = quarterly.asfreq('M', fill_value = 0)
+
+# Add missing months with .reindex()
+
+dates = pd.date_range(start='2016', periods=12, freq='M')
+quarterly.reindex(dates)
+
+##############
+
+# EXERCISE 1 - Convert monthly to weekly data
+
+# Set start and end dates
+start = '2016-1-1'
+end = '2016-2-29'
+
+# Create monthly_dates here
+monthly_dates = pd.date_range(start=start, end=end, freq='M')
+
+# Create monthly here
+monthly = pd.Series(data=[1,2], index=monthly_dates)
+print(monthly)
+
+# Create weekly_dates here
+weekly_dates = pd.date_range(start=start, end=end, freq='W')
+
+# Print monthly, reindexed using weekly_dates
+print(monthly.reindex(weekly_dates))
+print(monthly.reindex(weekly_dates, method='bfill'))
+print(monthly.reindex(weekly_dates, method='ffill'))
+
+<script.py> output:
+    2016-01-31    1
+    2016-02-29    2
+    Freq: M, dtype: int64
+    2016-01-03    NaN
+    2016-01-10    NaN
+    2016-01-17    NaN
+    2016-01-24    NaN
+    2016-01-31    1.0
+    2016-02-07    NaN
+    2016-02-14    NaN
+    2016-02-21    NaN
+    2016-02-28    NaN
+    Freq: W-SUN, dtype: float64
+    2016-01-03    1
+    2016-01-10    1
+    2016-01-17    1
+    2016-01-24    1
+    2016-01-31    1
+    2016-02-07    2
+    2016-02-14    2
+    2016-02-21    2
+    2016-02-28    2
+    Freq: W-SUN, dtype: int64
+    2016-01-03    NaN
+    2016-01-10    NaN
+    2016-01-17    NaN
+    2016-01-24    NaN
+    2016-01-31    1.0
+    2016-02-07    1.0
+    2016-02-14    1.0
+    2016-02-21    1.0
+    2016-02-28    1.0
+    Freq: W-SUN, dtype: float64
+
+##############
+
+# EXERCISE 2 - Create weekly from monthly unemployment data
+
+# Import data here
+data = pd.read_csv('unemployment.csv', parse_dates=['date'], index_col='date')
+
+# Show first five rows of weekly series
+print(data.asfreq('W').head())
+
+# Show first five rows of weekly series with bfill option
+print(data.asfreq('W', method='bfill').head())
+
+# Create weekly series with ffill option and show first five rows
+weekly_ffill = data.asfreq('W', method='ffill')
+print(weekly_ffill.head())
+
+# Plot weekly_fill starting 2015 here 
+weekly_ffill.loc['2015':].plot()
+plt.show()
+
+<script.py> output:
+                UNRATE
+    date              
+    2000-01-02     NaN
+    2000-01-09     NaN
+    2000-01-16     NaN
+    2000-01-23     NaN
+    2000-01-30     NaN
+                UNRATE
+    date              
+    2000-01-02     4.1
+    2000-01-09     4.1
+    2000-01-16     4.1
+    2000-01-23     4.1
+    2000-01-30     4.1
+                UNRATE
+    date              
+    2000-01-02     4.0
+    2000-01-09     4.0
+    2000-01-16     4.0
+    2000-01-23     4.0
+    2000-01-30     4.0
+
+
+##############
+
+# Upsampling & interpolation with .resample()
+
+unrate = pd.read_csv('unrate.csv', parse_dates['Date'], index_col='Date')
+unrate.info()
+# no frequency information
+
+# Resampling Period and Frequency Offsets
+
+# Calendar Month-End - Alias: M
+# Calendar Month-Start - Alias: MS
+# Business Month-End - Alias: BM
+# Business Month-Start - Alias: BMS
+
+# Assign Frequency with .resample()
+
+unrate.asfreq('MS').info()
+unrate.resample('MS') # creates Resampler object
+
+# Example with Quarterly real GDP growth
+
+gdp = pd.read_csv('gdp,csv')
+gdp.info()
+# Data is reported for the 1st day of each quarter
+
+# Use resample to convert this series to month-start frequency and forward fill to fill the gaps
+
+gdp_1 = gdp.resample('MS').ffill().add_suffix('_ffill')
+
+# Use interpolate to interpolate the missing values - finds points on straight line between existing data
+
+gdp_2 = gdp.resample('MS').interpolate().add_suffix('_inter')
+
+##############
+
+# EXERCISE 1 - Use interpolation to create weekly employment data
+
+# Inspect data here
+print(monthly.info())
+
+# Create weekly dates
+weekly_dates = pd.date_range(monthly.index.min(), monthly.index.max(), freq='W')
+
+# Reindex monthly to weekly data
+weekly = monthly.reindex(weekly_dates)
+
+# Create ffill and interpolated columns
+weekly['ffill'] = weekly.UNRATE.ffill()
+weekly['interpolated'] = weekly.UNRATE.interpolate()
+
+# Plot weekly
+weekly.plot()
+plt.show()
+
+# EXERCISE 2 - Interpolate debt/GDP and compare to unemployment
+
+# Import & inspect data here
+data = pd.read_csv('debt_unemployment.csv', parse_dates=['date'], index_col='date')
+print(data.info())
+
+# Interpolate and inspect here
+interpolated = data.interpolate()
+print(interpolated.info())
+
+# Plot interpolated data here
+interpolated.plot(secondary_y='Unemployment');
+plt.show()
+
+##############
+
+# Downsampling & aggregation
+
+ozone = pd.read_csv('ozone.csv', parse_dates=['date'], index_col='date')
+# assign calendar day frequency
+ozone = ozone.resample('D').asfreq()
+ozone.info()
+
+# apply monthly frequency with mean
+ozone.resample('M').mean().head() # monthly frequency, assigned to end of a calendar month
+# apply monthly frequency with median
+ozone.resample('M').median().head()
+# apply monthly frequency with aggregated method like groupby
+ozone.resample('M').agg(['mean','std']).head()
+
+# Plot the data starting 2016
+ozone = ozone.loc['2016':]
+ax = ozone.plot()
+monthly = ozone.resample('M').mean()
+monthly.add_suffix('_monthly').plot(ax=ax)
+
+# Resample multiple time series
+
+data = pd.read_csv('ozone_pm25.csv', parse_dates=['date'], index_col='date')
+data = data.resample('D').asfreq()
+data.info()
+
+# business-month-end frequency
+data = data.resample('BM').mean()
+# month-end frequency
+data = data.resample('M').first().head(4)
+# month-start frequency
+data = data.resample('MS').first().head()
+
+##############
+
+# EXERCISE 1 - Compare weekly, monthly and annual ozone trends for NYC & LA
+
+# Import and inspect data here
+ozone = pd.read_csv('ozone.csv', parse_dates=['date'], index_col='date')
+ozone.info();
+
+# Calculate and plot the weekly average ozone trend
+ozone.resample('W').mean().plot();
+plt.show()
+
+# Calculate and plot the monthly average ozone trend
+ozone.resample('M').mean().plot();
+plt.show();
+
+# Calculate and plot the annual average ozone trend
+ozone.resample('A').mean().plot();
+plt.show();
+
+
+# EXERCISE 2 - Compare monthly average stock prices for Facebook and Google
+
+# Import and inspect data here
+stocks = pd.read_csv('stocks.csv', parse_dates=['date'], index_col='date')
+print(stocks.info())
+
+# Calculate and plot the monthly averages
+monthly_average = stocks.resample('M').mean()
+monthly_average.plot(subplots=True);
+plt.show();
+
+# EXERCISE 3 - Compare quarterly GDP growth rate and stock returns
+
+# Import and inspect gdp_growth here
+gdp_growth = pd.read_csv('gdp_growth.csv', parse_dates=['date'], index_col='date')
+gdp_growth.info()
+
+# Import and inspect djia here
+djia = pd.read_csv('djia.csv', parse_dates=['date'], index_col='date')
+djia.info()
+
+# Calculate djia quarterly returns here 
+djia_quarterly = djia.resample('QS').first()
+djia_quarterly_return = djia_quarterly.pct_change().mul(100)
+
+# Concatenate, rename and plot djia_quarterly_return and gdp_growth here 
+data = pd.concat([gdp_growth, djia_quarterly_return], axis=1)
+data.columns = ['gdp', 'djia']
+
+data.plot()
+plt.show();
+
+# EXERCISE 4 - Visualize monthly mean, median and standard deviation of S&P500 returns
+
+# Import data here
+sp500 = pd.read_csv('sp500.csv', parse_dates=['date'], index_col='date')
+
+# Calculate daily returns here
+daily_returns = sp500.squeeze().pct_change()
+
+# Resample and calculate statistics
+stats = daily_returns.resample('M').agg(['mean', 'median','std'])
+
+# Plot stats here
+stats.plot()
+plt.show()
 
 
 
